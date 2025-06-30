@@ -96,6 +96,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/home.jpg
     - assets/svg/
     - assets/svg/bottomnav/
     - assets/languages/

@@ -8,7 +8,7 @@ class AppIcons {
   static final MainIcons main = MainIcons();
 
   static String splashLogo = _svgPath("Logo/splashlogo");
-  static String appbarLogo = _svgPath("Logo/appbarLogo");
+  static String appbarLogo = _svgPath("Logo/placeholder");
 
   static String categoryBg = "assets/categoryBg.png";
 

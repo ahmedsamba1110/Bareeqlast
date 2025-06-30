@@ -211,7 +211,7 @@ class HomeScreenState extends State<HomeScreen>
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
-      UiUtils.getSvg(AppIcons.appbarLogo, height: 30, width: 30),
+      // UiUtils.getSvg(AppIcons.appbarLogo, height: 30, width: 30),
     ]);
   }
 

@@ -27,7 +27,7 @@ class PaymentGateway {
 
 class AppSettings {
   /// Basic Settings
-  static const String applicationName = 'eClassify';
+  static const String applicationName = ' Bareeq ';
   static const String packageName = 'sd.bareeq.ads';
   static const String shareAppText = "Share this App";
 
