@@ -1,1 +1,37 @@
+name: Build & Upload APK to Telegram
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Flutter APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0' # غيّر حسب نسختك
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK to Telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -F chat_id=$TELEGRAM_CHAT_ID \
+               -F document=@build/app/outputs/flutter-apk/app-release.apk \
+               -F caption="🚀 APK جديدة تم إنشاؤها تلقائيًا من GitHub Actions" \
+               https://api.telegram.org/bot$TELEGRAM_TOKEN/sendDocument
 
