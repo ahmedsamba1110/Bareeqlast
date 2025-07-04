@@ -27,7 +27,7 @@ class PaymentGateway {
 
 class AppSettings {
   /// Basic Settings
-  static const String applicationName = ' بريق32 ';
+  static const String applicationName = ' برقق تليجرام ';
   static const String packageName = 'sd.bareeq.ads';
   static const String shareAppText = "Share this App";
 
