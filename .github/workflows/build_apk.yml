@@ -1,4 +1,4 @@
-name: Build & Upload APK to Telegram
+name: Build & Upload AAB to Google Drive
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-    name: Build Flutter APK
     runs-on: ubuntu-latest
 
     steps:
@@ -17,21 +16,34 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.4' # غيّر حسب نسختك
+          flutter-version: '3.27.4'  # غيّر حسب إصدارك
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build AAB
+        run: flutter build appbundle --release
 
-      - name: Upload APK to Telegram
+      - name: Install gdrive uploader
+        run: |
+          sudo apt-get install unzip
+          wget -q https://github.com/prasmussen/gdrive/releases/download/2.1.1/gdrive-linux-x64
+          chmod +x gdrive-linux-x64
+          sudo mv gdrive-linux-x64 /usr/local/bin/gdrive
+
+      - name: Decode and save service account JSON
+        run: |
+          echo "${{ secrets.GDRIVE_CREDENTIALS }}" | base64 -d > key.json
+
+      - name: Upload AAB to Google Drive
+        run: |
+          gdrive --service-account key.json upload build/app/outputs/bundle/release/app-release.aab --parent YOUR_FOLDER_ID
+
+      - name: Send Telegram message
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          curl -F chat_id=$TELEGRAM_CHAT_ID \
-               -F document=@build/app/outputs/flutter-apk/app-release.apk \
-               -F caption="🚀 APK جديدة تم إنشاؤها تلقائيًا من GitHub Actions" \
-               https://api.telegram.org/bot$TELEGRAM_TOKEN/sendDocument
-
+          curl -s -X POST https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage \
+            -d chat_id=$TELEGRAM_CHAT_ID \
+            -d text="✅ تم بناء ورفع ملف AAB إلى Google Drive.\n📁 افتح المجلد من هنا:\nhttps://drive.google.com/drive/folders/YOUR_FOLDER_ID"
